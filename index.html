@@ -15,19 +15,20 @@
             margin: 0;
             background-color: #fdfae1; /* Светлый фон */
             font-family: 'Arial', sans-serif;
-            overflow: hidden; /* Чтобы не появлялись полосы прокрутки при росте кнопки */
+            overflow: hidden; 
             text-align: center;
         }
 
         /* Контейнер для видео */
         .video-wrapper {
             width: 100%;
-            max-width: 350px; /* Ограничение ширины для ПК */
+            max-width: 350px; 
             height: auto;
             margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative; /* Чтобы видео накладывались друг на друга при смене */
         }
 
         /* Стиль для самих видеоплееров */
@@ -35,6 +36,12 @@
             width: 100%;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            display: block;
+        }
+
+        /* Класс для скрытия элементов */
+        .hidden {
+            display: none !important;
         }
 
         /* Заголовок */
@@ -68,7 +75,7 @@
         #yesBtn {
             background-color: #4CAF50; /* Зеленый */
             color: white;
-            transition: all 0.3s ease; /* Плавное увеличение */
+            transition: all 0.3s ease; 
         }
 
         /* Кнопка NO */
@@ -76,19 +83,21 @@
             background-color: #ef4444; /* Красный */
             color: white;
         }
-
-        /* Класс для скрытия элементов */
-        .hidden {
-            display: none !important;
-        }
     </style>
 </head>
 <body>
 
     <div class="video-wrapper">
-        <video id="minionVideo" src="AFA22B17-F295-4D4E-BD63-9F202D863C55.mp4" autoplay muted playsinline></video>
+        <video id="minionVideo" 
+               src="AFA22B17-F295-4D4E-BD63-9F202D863C55.mp4" 
+               autoplay muted playsinline preload="auto">
+        </video>
         
-        <video id="fireworksVideo" src="fireworks.mp4" class="hidden" playsinline></video>
+        <video id="fireworksVideo" 
+               src="BE4F6EAA-3CAB-4964-BE61-670BAF6C0F39.mov" 
+               class="hidden" 
+               playsinline preload="auto">
+        </video>
     </div>
 
     <h1 id="mainText">Will you be my valentine?</h1>
@@ -99,7 +108,6 @@
     </div>
 
     <script>
-        // Получаем элементы со страницы
         const minionVideo = document.getElementById('minionVideo');
         const fireworksVideo = document.getElementById('fireworksVideo');
         const yesBtn = document.getElementById('yesBtn');
@@ -107,12 +115,10 @@
         const mainText = document.getElementById('mainText');
         const btnGroup = document.getElementById('btnGroup');
 
-        // Переменные для логики
         let clickCount = 0;
-        let currentYesFontSize = 18; // Начальный размер шрифта
-        let currentYesPadding = 12;  // Начальный отступ
+        let currentYesFontSize = 18;
+        let currentYesPadding = 12; 
 
-        // Фразы для кнопки NO
         const noTexts = [
             "Are you sure? 🥺",
             "Really sure?? 😢",
@@ -123,47 +129,47 @@
             "PLEASE! 🧸"
         ];
 
-        // Функция: перезапуск миньона
+        // Функция перезапуска миньона
         function restartMinion() {
             minionVideo.currentTime = 0;
             minionVideo.play();
         }
 
-        // --- ЛОГИКА КНОПКИ NO ---
+        // --- ЛОГИКА NO ---
         noBtn.addEventListener('click', function() {
-            // 1. Перезапускаем видео миньона
-            restartMinion();
+            restartMinion(); // Перезапуск видео
 
-            // 2. Меняем текст кнопки (только если есть ещё фразы)
+            // Меняем текст кнопки NO
             if (clickCount < noTexts.length) {
                 noBtn.innerText = noTexts[clickCount];
             }
 
-            // 3. Увеличиваем кнопку YES
+            // Увеличиваем кнопку YES
             clickCount++;
-            currentYesFontSize += 15; // Растет шрифт
-            currentYesPadding += 10;  // Растет сама кнопка
+            currentYesFontSize += 15;
+            currentYesPadding += 10;
             
             yesBtn.style.fontSize = `${currentYesFontSize}px`;
             yesBtn.style.padding = `${currentYesPadding}px ${currentYesPadding * 2}px`;
         });
 
-        // --- ЛОГИКА КНОПКИ YES ---
+        // --- ЛОГИКА YES ---
         yesBtn.addEventListener('click', function() {
-            // 1. Скрываем миньона и кнопки
+            // Прячем миньона и кнопки
             minionVideo.classList.add('hidden');
+            minionVideo.pause(); // Останавливаем миньона, чтобы не грузил фон
+            
             btnGroup.classList.add('hidden');
 
-            // 2. Меняем текст
+            // Меняем текст
             mainText.innerText = "YAYYY!!! ❤️";
 
-            // 3. Показываем и запускаем салют
+            // Показываем и запускаем салют
             fireworksVideo.classList.remove('hidden');
             fireworksVideo.currentTime = 0;
-            fireworksVideo.muted = false; // Включаем звук салюта (по желанию)
+            fireworksVideo.muted = false; // Включаем звук (если есть)
             fireworksVideo.play();
         });
-
     </script>
 </body>
 </html>
