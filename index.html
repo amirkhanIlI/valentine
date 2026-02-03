@@ -5,76 +5,83 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Be My Valentine?</title>
     <style>
+        /* Основные стили страницы */
         body {
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start; 
+            justify-content: center;
             min-height: 100vh;
             margin: 0;
-            padding-top: 50px; 
-            background-color: #fdfae1;
+            background-color: #fdfae1; /* Светлый фон */
             font-family: 'Arial', sans-serif;
             overflow: hidden; 
             text-align: center;
         }
 
+        /* Контейнер для видео */
         .video-wrapper {
-            width: 80%; 
-            max-width: 280px; 
-            margin-bottom: 15px;
+            width: 100%;
+            max-width: 350px; 
+            height: auto;
+            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
+            position: relative; /* Чтобы видео накладывались друг на друга при смене */
         }
 
+        /* Стиль для самих видеоплееров */
         video {
             width: 100%;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            background-color: #000;
+            display: block;
         }
 
+        /* Класс для скрытия элементов */
         .hidden {
             display: none !important;
         }
 
+        /* Заголовок */
         h1 {
             color: #333;
-            margin: 10px 0 20px 0;
-            font-size: 20px;
-            padding: 0 10px;
+            margin-bottom: 30px;
+            font-size: 24px;
         }
 
+        /* Блок с кнопками */
         .buttons-container {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             align-items: center;
             justify-content: center;
-            width: 100%;
+            flex-wrap: wrap;
         }
 
+        /* Общий стиль кнопок */
         button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 24px;
+            font-size: 18px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
+            transition: transform 0.1s ease;
             font-weight: bold;
-            white-space: nowrap; 
         }
 
+        /* Кнопка YES */
         #yesBtn {
-            background-color: #4CAF50;
+            background-color: #4CAF50; /* Зеленый */
             color: white;
-            z-index: 10; 
+            transition: all 0.3s ease; 
         }
 
+        /* Кнопка NO */
         #noBtn {
-            background-color: #ef4444;
+            background-color: #ef4444; /* Красный */
             color: white;
-            position: relative; 
-            transition: transform 0.2s ease;
         }
     </style>
 </head>
@@ -109,48 +116,58 @@
         const btnGroup = document.getElementById('btnGroup');
 
         let clickCount = 0;
-        let currentYesFontSize = 16;
-        let currentYesPadding = 10; 
-        let noOffset = 0;
+        let currentYesFontSize = 18;
+        let currentYesPadding = 12; 
 
         const noTexts = [
-            "Are you sure? 🥺", "Really sure?? 😢", "Think again! 💔", 
-            "Last chance! 😭", "Don't do this... 🙏", "PLEASE! 🧸"
+            "Are you sure? 🥺",
+            "Really sure?? 😢",
+            "Think again! 💔",
+            "Last chance! 😭",
+            "Don't do this... 🙏",
+            "You're breaking my heart! 😿",
+            "PLEASE! 🧸"
         ];
 
-        function checkAndRestartMinion() {
-            if (minionVideo.ended) {
-                minionVideo.currentTime = 0;
-                minionVideo.play();
-            }
+        // Функция перезапуска миньона
+        function restartMinion() {
+            minionVideo.currentTime = 0;
+            minionVideo.play();
         }
 
+        // --- ЛОГИКА NO ---
         noBtn.addEventListener('click', function() {
-            checkAndRestartMinion();
+            restartMinion(); // Перезапуск видео
 
+            // Меняем текст кнопки NO
             if (clickCount < noTexts.length) {
                 noBtn.innerText = noTexts[clickCount];
             }
 
+            // Увеличиваем кнопку YES
             clickCount++;
+            currentYesFontSize += 15;
+            currentYesPadding += 10;
             
-            currentYesFontSize += 12;
-            currentYesPadding += 8;
             yesBtn.style.fontSize = `${currentYesFontSize}px`;
-            yesBtn.style.padding = `${currentYesPadding}px ${currentYesPadding * 1.5}px`;
-
-            noOffset += 50; 
-            noBtn.style.transform = `translateX(${noOffset}px)`;
+            yesBtn.style.padding = `${currentYesPadding}px ${currentYesPadding * 2}px`;
         });
 
+        // --- ЛОГИКА YES ---
         yesBtn.addEventListener('click', function() {
+            // Прячем миньона и кнопки
             minionVideo.classList.add('hidden');
-            minionVideo.pause();
+            minionVideo.pause(); // Останавливаем миньона, чтобы не грузил фон
             
             btnGroup.classList.add('hidden');
+
+            // Меняем текст
             mainText.innerText = "YAYYY!!! ❤️";
 
+            // Показываем и запускаем салют
             fireworksVideo.classList.remove('hidden');
+            fireworksVideo.currentTime = 0;
+            fireworksVideo.muted = false; // Включаем звук (если есть)
             fireworksVideo.play();
         });
     </script>
