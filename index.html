@@ -9,28 +9,30 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: flex-start; 
             min-height: 100vh;
             margin: 0;
-            padding-top: 5vh;
+            padding-top: 50px; 
             background-color: #fdfae1;
             font-family: 'Arial', sans-serif;
-            overflow: hidden;
+            overflow: hidden; 
             text-align: center;
         }
 
         .video-wrapper {
-            width: 70%;
-            max-width: 250px;
-            margin-bottom: 20px;
+            width: 80%; 
+            max-width: 280px; 
+            margin-bottom: 15px;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
 
         video {
             width: 100%;
             border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            background-color: #000;
         }
 
         .hidden {
@@ -39,38 +41,39 @@
 
         h1 {
             color: #333;
-            font-size: 22px;
-            margin-bottom: 30px;
+            margin: 10px 0 20px 0;
+            font-size: 20px;
+            padding: 0 10px;
         }
 
         .buttons-container {
-            position: relative;
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
             justify-content: center;
             width: 100%;
         }
 
         button {
-            padding: 12px 24px;
-            font-size: 18px;
+            padding: 10px 20px;
+            font-size: 16px;
             border: none;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
-            white-space: nowrap;
+            white-space: nowrap; 
         }
 
         #yesBtn {
             background-color: #4CAF50;
             color: white;
-            z-index: 100;
+            z-index: 10; 
         }
 
         #noBtn {
             background-color: #ef4444;
             color: white;
+            position: relative; 
             transition: transform 0.2s ease;
         }
     </style>
@@ -84,9 +87,9 @@
         </video>
         
         <video id="fireworksVideo" 
-               src="https://BE4F6EAA-3CAB-4964-BE61-670BAF6C0F39.mov" 
+               src="BE4F6EAA-3CAB-4964-BE61-670BAF6C0F39.mov" 
                class="hidden" 
-               playsinline preload="auto" muted>
+               playsinline preload="auto">
         </video>
     </div>
 
@@ -106,22 +109,24 @@
         const btnGroup = document.getElementById('btnGroup');
 
         let clickCount = 0;
-        let currentYesFontSize = 18;
-        let currentYesPadding = 12;
-        let noShift = 0;
+        let currentYesFontSize = 16;
+        let currentYesPadding = 10; 
+        let noOffset = 0;
 
         const noTexts = [
             "Are you sure? 🥺", "Really sure?? 😢", "Think again! 💔", 
             "Last chance! 😭", "Don't do this... 🙏", "PLEASE! 🧸"
         ];
 
-        // Логика кнопки No
-        noBtn.addEventListener('click', function() {
-            // Видео миньона перезапускается только если досмотрено до конца
+        function checkAndRestartMinion() {
             if (minionVideo.ended) {
                 minionVideo.currentTime = 0;
                 minionVideo.play();
             }
+        }
+
+        noBtn.addEventListener('click', function() {
+            checkAndRestartMinion();
 
             if (clickCount < noTexts.length) {
                 noBtn.innerText = noTexts[clickCount];
@@ -129,25 +134,16 @@
 
             clickCount++;
             
-            // Увеличиваем Yes
-            currentYesFontSize += 15;
-            currentYesPadding += 10;
-            yesBtn.style.fontSize = currentYesFontSize + 'px';
-            yesBtn.style.padding = currentYesPadding + 'px ' + (currentYesPadding * 2) + 'px';
+            currentYesFontSize += 12;
+            currentYesPadding += 8;
+            yesBtn.style.fontSize = `${currentYesFontSize}px`;
+            yesBtn.style.padding = `${currentYesPadding}px ${currentYesPadding * 1.5}px`;
 
-            // Улетаем вправо
-            noShift += 100;
-            noBtn.style.transform = `translateX(${noShift}px)`;
-            
-            // Если совсем далеко ушла — скрываем, чтобы не мешала
-            if (noShift > 400) {
-                noBtn.style.opacity = '0';
-            }
+            noOffset += 50; 
+            noBtn.style.transform = `translateX(${noOffset}px)`;
         });
 
-        // Логика кнопки Yes
         yesBtn.addEventListener('click', function() {
-            // Мгновенная рокировка
             minionVideo.classList.add('hidden');
             minionVideo.pause();
             
@@ -155,7 +151,7 @@
             mainText.innerText = "YAYYY!!! ❤️";
 
             fireworksVideo.classList.remove('hidden');
-            fireworksVideo.play(); // Просто запуск
+            fireworksVideo.play();
         });
     </script>
 </body>
